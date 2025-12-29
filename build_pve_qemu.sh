@@ -4,8 +4,8 @@ ls
 df -h
 git clone git://git.proxmox.com/git/pve-qemu.git
 cd pve-qemu
-# 10.1.2-4
-git reset --hard ae1309d4df5ca9b6b62122d0f75bbae229856f48
+# 10.1.2-5
+git reset --hard de7f8fe356c7b1d346c3c15c971f7a0dcd11e70e
 sudo apt install devscripts -y
 yes | sudo mk-build-deps --install
 git submodule update --init --recursive
