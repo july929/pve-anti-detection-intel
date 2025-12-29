@@ -1,13 +1,13 @@
 #!/bin/bash
-apt-get install -y libacl1-dev libaio-dev libattr1-dev libcap-ng-dev libcurl4-gnutls-dev libepoxy-dev libfdt-dev libgbm-dev libgnutls28-dev libiscsi-dev libjpeg-dev libnuma-dev libpci-dev libpixman-1-dev libproxmox-backup-qemu0-dev librbd-dev libsdl1.2-dev libseccomp-dev libslirp-dev libspice-protocol-dev libspice-server-dev libsystemd-dev liburing-dev libusb-1.0-0-dev libusbredirparser-dev libvirglrenderer-dev meson python3-sphinx python3-sphinx-rtd-theme quilt xfslibs-dev
+sudo apt-get install -y libacl1-dev libaio-dev libattr1-dev libcap-ng-dev libcurl4-gnutls-dev libepoxy-dev libfdt-dev libgbm-dev libgnutls28-dev libiscsi-dev libjpeg-dev libnuma-dev libpci-dev libpixman-1-dev libproxmox-backup-qemu0-dev librbd-dev libsdl1.2-dev libseccomp-dev libslirp-dev libspice-protocol-dev libspice-server-dev libsystemd-dev liburing-dev libusb-1.0-0-dev libusbredirparser-dev libvirglrenderer-dev meson python3-sphinx python3-sphinx-rtd-theme quilt xfslibs-dev
 ls
 df -h
 git clone git://git.proxmox.com/git/pve-qemu.git
 cd pve-qemu
 # 10.1.2-4
 git reset --hard ae1309d4df5ca9b6b62122d0f75bbae229856f48
-apt install devscripts -y
-yes | mk-build-deps --install
+sudo apt install devscripts -y
+yes | sudo mk-build-deps --install
 git submodule update --init --recursive
 cp ../sedPatch-pve-qemu-kvm9-10-anti-dection.sh qemu/
 cd qemu
