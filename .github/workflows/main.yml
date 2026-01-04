@@ -30,7 +30,7 @@ jobs:
       # Step 3: 构建 deb 文件
       - name: 3-Build
         run: |
-          sudo bash build_pve_qemu.sh
+          sudo bash build_pve_qemu_pve8.sh
           mkdir -p artifacts
           find ./ -name "*.deb" -exec cp {} ./artifacts/ \;
           find ./ -name "*autoGenPatch.patch" -exec cp {} ./artifacts/ \;
