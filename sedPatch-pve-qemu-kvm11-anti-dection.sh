@@ -1,5 +1,5 @@
 #!/bin/bash
-brand="ASUS" #这里修改品牌，仅4个大写英文字母
+brand="Lenovo" #这里修改品牌
 echo "开始sed工作"
 sed -i 's/QEMU v" QEMU_VERSION/'${brand}' v" QEMU_VERSION/g' block/vhdx.c
 sed -i 's/QEMU VVFAT", 10/'${brand}' VVFAT", 10/g' block/vvfat.c
@@ -69,15 +69,15 @@ sed -i 's/QEMU MPT Fusion/'${brand}' MPT Fusion/g' hw/scsi/mptconfig.c
 sed -i 's/"QEMU"/"'${brand}'"/g' hw/scsi/mptconfig.c
 sed -i 's/0000111122223333/1145141919810000/g' hw/scsi/mptconfig.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/scsi/scsi-bus.c
-sed -i 's/qemu_hw_version()/"666"/g' hw/scsi/scsi-bus.c #scsi bus version 4字符大小
+sed -i 's/qemu_hw_version()/"999"/g' hw/scsi/scsi-bus.c #scsi bus version 4字符大小
 sed -i 's/"QEMU/"'${brand}'/g' hw/scsi/megasas.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/scsi/scsi-disk.c
-sed -i 's/qemu_hw_version()/"666"/g' hw/scsi/scsi-disk.c #scsi 固件version 5字符大小
+sed -i 's/qemu_hw_version()/"999"/g' hw/scsi/scsi-disk.c #scsi 固件version 5字符大小
 sed -i 's/"QEMU/"'${brand}'/g' hw/scsi/spapr_vscsi.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/sd/sd.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/ufs/lu.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/usb/dev-audio.c
-sed -i 's/"QEMU/"'${brand}'/g' hw/usb/dev-hid.c
+sed -i 's/"QEMU/"'Logitech'/g' hw/usb/dev-hid.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/usb/dev-hub.c
 sed -i 's/314159/114514/g' hw/usb/dev-hub.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/usb/dev-mtp.c
@@ -128,7 +128,9 @@ sed -i 's/"Microsoft Hv/"GenuineIntel/g' target/i386/cpu.c  #解决n卡vgpu驱�
 #sed -i 's/#define PCI_SUBVENDOR_ID_REDHAT_QUMRANET 0x1af4/#define PCI_SUBVENDOR_ID_REDHAT_QUMRANET 0x8086/g' include/hw/pci/pci.h # 0x1afe 是qemu虚拟机的id，这里为了兼容性只处理SUBVENDOR_ID。如果处理了VENDOR_ID=0x1af4 或者 VENDOR_ID=0x1b36 为其他值会造成一些设备无法使用。
 #sed -i 's/#define PCI_VENDOR_ID_REDHAT_QUMRANET    0x1af4/#define PCI_VENDOR_ID_REDHAT_QUMRANET    0x8085/g' include/hw/pci/pci.h #如果处理了VENDOR_ID=0x1af4 或者 VENDOR_ID=0x1b36 为其他值会造成一些设备无法使用。比如scsi virtioNET virtioBlock不认
 #sed -i 's/#define PCI_VENDOR_ID_REDHAT             0x1b36/#define PCI_VENDOR_ID_REDHAT             0x8085/g' include/hw/pci/pci.h #如果处理了VENDOR_ID=0x1af4 或者 VENDOR_ID=0x1b36 为其他值会造成一些设备无法使用。比如scsi virtioNET virtioBlock不认
-sed -i 's/0x1af4/0x8086/g' hw/audio/hda-codec.c # QEMU_HDA_ID_VENDOR  0x1af4 =ich9-intel-hda
+sed -i 's/0x1af4/0x10EC/g' hw/audio/hda-codec.c # QEMU_HDA_ID_VENDOR  0x1af4 =ich9-intel-hda
+sed -i 's/0x2668/0x51c8/g' hw/audio/intel-hda.c # Intel 82801IB ICH6 - High Definition Audio
+sed -i 's/0x293e/0x51c8/g' hw/audio/intel-hda.c # Intel 82801IB ICH9 - High Definition Audio
 sed -i 's/rev = 3/rev = 4/g' hw/i386/acpi-build.c # Most VMs use an older-style FADT of length 244  bytes (revision  3), cutting off before the Sleep Control/Status registers and Hypervisor ID
 sed -i 's/fadt.rev = 1/fadt.rev = 4/g' hw/i386/acpi-build.c # Most VMs use an older-style FADT of length 244  bytes (revision  3), cutting off before the Sleep Control/Status registers and Hypervisor ID
 sed -i 's/if (f->rev <= 4) {/if (f->rev <= 6) {\n\t\tbuild_append_gas_from_struct(tbl, \&f->sleep_ctl);\n\t\tbuild_append_gas_from_struct(tbl, \&f->sleep_sts);/g' hw/acpi/aml-build.c # # Most VMs use an older-style FADT of length 244  bytes (revision  3), cutting off before the Sleep Control/Status registers and Hypervisor ID
