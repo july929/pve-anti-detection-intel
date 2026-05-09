@@ -1,5 +1,5 @@
 #!/bin/bash
-brand="Lenovo" #这里修改品牌
+brand="ASUS" #这里修改品牌
 echo "开始sed工作"
 sed -i 's/QEMU v" QEMU_VERSION/'${brand}' v" QEMU_VERSION/g' block/vhdx.c
 sed -i 's/QEMU VVFAT", 10/'${brand}' VVFAT", 10/g' block/vvfat.c
