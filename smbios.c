@@ -17,6 +17,7 @@
 
 #include "qemu/osdep.h"
 #include "qemu/units.h"
+#include "qemu/bswap.h"
 #include "qapi/error.h"
 #include "qemu/config-file.h"
 #include "qemu/module.h"
@@ -178,6 +179,10 @@ static const QemuOptDesc qemu_smbios_type0_opts[] = {
         .name = "uefi",
         .type = QEMU_OPT_BOOL,
         .help = "uefi support",
+    },{
+        .name = "vm",
+        .type = QEMU_OPT_BOOL,
+        .help = "real machine",
     },
     { /* end of list */ }
 };
@@ -748,14 +753,16 @@ static void smbios_build_type_0_table(void)
     t->bios_rom_size = 0; /* hardcoded in SeaBIOS with FIXME comment */
 
     t->bios_characteristics = cpu_to_le64(0x08); /* Not supported */
-
     t->bios_characteristics_extension_bytes[0] = 0xEF; //李晓流 dds666 modify
+	
     t->bios_characteristics_extension_bytes[1] = 0x0F; /* //李晓流 dds666 modify 只要不是0x10 也就是16就不会显示VirtualMachineSupported */
 
     if (smbios_type0.uefi) {
         t->bios_characteristics_extension_bytes[1] |= 0x08; /* |= UEFI */
     }
-
+   if (smbios_type0.vm) {
+        t->bios_characteristics_extension_bytes[1] |= 0x08; /* |= VM */
+    }
     if (smbios_type0.have_major_minor) {
         t->system_bios_major_release = smbios_type0.major;
         t->system_bios_minor_release = smbios_type0.minor;
@@ -802,7 +809,8 @@ static void smbios_build_type_1_table(void)
 
 static void smbios_build_type_2_table(void)
 {
-    SMBIOS_BUILD_TABLE_PRE(2, T2_BASE, true); /* optional */
+    SMBIOS_BUILD_TABLE_PRE(2, T2_BASE, false); /* optional */
+	
     SMBIOS_TABLE_SET_STR(2, manufacturer_str, type2.manufacturer);
     SMBIOS_TABLE_SET_STR(2, product_str, type2.product);
     SMBIOS_TABLE_SET_STR(2, version_str, type2.version);
@@ -829,7 +837,7 @@ static void smbios_build_type_3_table(void)
     t->boot_up_state = 0x03; /* Safe */
     t->power_supply_state = 0x03; /* Safe */
     t->thermal_state = 0x03; /* Safe */
-     t->security_status = 0x02; /* Unknown */
+    t->security_status = 0x02; /* Unknown */
     t->oem_defined = cpu_to_le32(0);
     t->height = 0;
     t->number_of_power_cords = 0;
@@ -855,6 +863,7 @@ static void smbios_build_type_4_table(MachineState *ms, unsigned instance,
 
     SMBIOS_BUILD_TABLE_PRE_SIZE(4, T4_BASE + instance,
                                 true, tbl_len); /* required */
+	
     snprintf(sock_str, sizeof(sock_str), "%s%2x", type4.sock_pfx, instance);
     SMBIOS_TABLE_SET_STR(4, socket_designation_str, type4.sock_pfx);
     t->processor_type = 0x03; /* CPU */
@@ -995,6 +1004,7 @@ static void smbios_build_type_11_table(void)
 {
     char count_str[128];
     size_t i;
+	
     if (type11.nvalues == 0) {
         return;
     }
@@ -1301,6 +1311,7 @@ static bool smbios_get_tables_ep(MachineState *ms,
             goto err_exit;
         }
     }
+	
 	//李晓流 dds666 added
 	//unsigned instance,const char *socket_designation,uint16_t cache_configuration,uint16_t max_cache_size,uint8_t error_correction,uint8_t system_cache_type,uint8_t associativity
 	/*
@@ -1509,6 +1520,8 @@ static int save_opt_one(void *opaque,
             }
             g_byte_array_append(data, (guint8 *)buf, ret);
         }
+        buf[0] = '\0';
+        g_byte_array_append(data, (guint8 *)buf, 1);
 
         qemu_close(fd);
 
@@ -1553,7 +1566,7 @@ void smbios_entry_add(QemuOpts *opts, Error **errp)
             return;
         }
 
-        size = get_image_size(val);
+        size = get_image_size(val, NULL);
         if (size == -1 || size < sizeof(struct smbios_structure_header)) {
             error_setg(errp, "Cannot read SMBIOS file %s", val);
             return;
@@ -1626,6 +1639,7 @@ void smbios_entry_add(QemuOpts *opts, Error **errp)
             save_opt(&smbios_type0.version, opts, "version");
             save_opt(&smbios_type0.date, opts, "date");
             smbios_type0.uefi = qemu_opt_get_bool(opts, "uefi", false);
+			smbios_type0.vm = qemu_opt_get_bool(opts, "vm", false);
 
             val = qemu_opt_get(opts, "release");
             if (val) {
