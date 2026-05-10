@@ -9,7 +9,7 @@ sed -i 's/QEMU vhost-user-gpu/'${brand}' vhost-user-gpu/g' contrib/vhost-user-gp
 sed -i 's/desc->oem_id/ACPI_BUILD_APPNAME6/g' hw/acpi/aml-build.c
 sed -i 's/desc->oem_table_id/ACPI_BUILD_APPNAME8/g' hw/acpi/aml-build.c
 sed -i 's/array, ACPI_BUILD_APPNAME8/array, "PTL "/g' hw/acpi/aml-build.c
-sed -i 's/"QEMU/"Intel/g' hw/acpi/aml-build.c
+sed -i 's/"QEMU/"GenuineIntel/g' hw/acpi/aml-build.c
 
 grep "do this once" hw/acpi/vmgenid.c >/dev/null
 if [ $? -eq 0 ]; then
@@ -78,7 +78,7 @@ sed -i 's/"QEMU/"'${brand}'/g' hw/sd/sd.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/ufs/lu.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/usb/dev-audio.c
 sed -i 's/"QEMU/"'Logitech'/g' hw/usb/dev-hid.c
-sed -i 's/"QEMU/"'${brand}'/g' hw/usb/dev-hub.c
+sed -i 's/"QEMU/"'Logitech'/g' hw/usb/dev-hub.c
 sed -i 's/314159/114514/g' hw/usb/dev-hub.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/usb/dev-mtp.c
 sed -i 's/"QEMU/"'${brand}'/g' hw/usb/dev-network.c
