@@ -1124,22 +1124,6 @@ static void smbios_build_type_19_table(unsigned instance, unsigned offset,
     SMBIOS_BUILD_TABLE_POST;
 }
 
- static void smbios_build_type_27_table(void)
-{
-    const char *desc_str = "CPU Fan";
-
-    SMBIOS_BUILD_TABLE_PRE(27, T27_BASE, true);
-
-    t->temperature_probe_handle = cpu_to_le16(0xFFFF);
-    t->device_type_and_status = 0x65;
-    t->cooling_unitGroup = 0;
-    t->oem_defined = 0;
-    t->nominal_speed = cpu_to_le16(0x1C20);
-    SMBIOS_TABLE_SET_STR(27,description, desc_str);
-
-    SMBIOS_BUILD_TABLE_POST;
-}
-
 static void smbios_build_type_32_table(void)
 {
     SMBIOS_BUILD_TABLE_PRE(32, T32_BASE, true); /* required */
@@ -1318,7 +1302,6 @@ static bool smbios_get_tables_ep(MachineState *ms,
     smbios_build_type_1_table();
     smbios_build_type_2_table();
     smbios_build_type_3_table();
-	smbios_build_type_27_table();
 
     assert(ms->smp.sockets >= 1);
 
