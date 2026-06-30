@@ -303,6 +303,17 @@ struct smbios_type_19 {
     uint64_t extended_ending_address;
 } QEMU_PACKED;
 
+/* SMBIOS type 27 – Cooling Device */
+struct smbios_type_27 {
+    struct smbios_structure_header header;
+    uint16_t temperature_probe_handle;
+    uint8_t device_type_and_status;
+    uint8_t cooling_unitGroup;
+    uint32_t oem_defined;
+    uint16_t nominal_speed;
+    uint8_t description ;
+} QEMU_PACKED;
+
 /* SMBIOS type 32 - System Boot Information */
 struct smbios_type_32 {
     struct smbios_structure_header header;
