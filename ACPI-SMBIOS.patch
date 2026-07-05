@@ -146,49 +146,6 @@ diff -uprN "a/hw/i386/fw_cfg.c" "b/hw/i386/fw_cfg.c"
      Aml *crs = aml_resource_template();
  
      /*
-diff -uprN "a/hw/smbios/smbios.c" "b/hw/smbios/smbios.c"
---- "a/hw/smbios/smbios.c"	2026-06-05 14:37:06.105995688 +0800
-+++ "b/hw/smbios/smbios.c"	2026-06-05 14:37:06.107013418 +0800
-@@ -559,6 +559,7 @@ bool smbios_skip_table(uint8_t type, boo
- #define T16_BASE 0x1000
- #define T17_BASE 0x1100
- #define T19_BASE 0x1300
-+#define T27_BASE 0x1700
- #define T32_BASE 0x2000
- #define T41_BASE 0x2900
- #define T127_BASE 0x7F00
-@@ -941,6 +942,22 @@ static void smbios_build_type_19_table(u
-     SMBIOS_BUILD_TABLE_POST;
- }
- 
-+static void smbios_build_type_27_table(void)
-+{
-+    const char *desc_str = "CPU Fan";
-+
-+    SMBIOS_BUILD_TABLE_PRE(27, T27_BASE, true);
-+
-+    t->temperature_probe_handle = cpu_to_le16(0xFFFF);
-+    t->device_type_and_status = 0x65;
-+    t->cooling_unitGroup = 0;
-+    t->oem_defined = 0;
-+    t->nominal_speed = cpu_to_le16(0x1C20);
-+    SMBIOS_TABLE_SET_STR(27,description, desc_str);
-+
-+    SMBIOS_BUILD_TABLE_POST;
-+}
-+
- static void smbios_build_type_32_table(void)
- {
-     SMBIOS_BUILD_TABLE_PRE(32, T32_BASE, true); /* required */
-@@ -1161,6 +1178,8 @@ static bool smbios_get_tables_ep(Machine
-                                    mem_array[i].length);
-     }
- 
-+    smbios_build_type_27_table();
-+
-     /*
-      * make sure 16 bit handle numbers in the headers of tables 19
-      * and 32 do not overlap.
 diff -uprN "a/include/hw/acpi/aml-build.h" "b/include/hw/acpi/aml-build.h"
 --- "a/include/hw/acpi/aml-build.h"	2026-06-05 14:37:06.102554367 +0800
 +++ "b/include/hw/acpi/aml-build.h"	2026-06-05 14:37:06.103620812 +0800
@@ -202,24 +159,3 @@ diff -uprN "a/include/hw/acpi/aml-build.h" "b/include/hw/acpi/aml-build.h"
  Aml *aml_method(const char *name, int arg_count, AmlSerializeFlag sflag);
  Aml *aml_if(Aml *predicate);
  Aml *aml_else(void);
-diff -uprN "a/include/hw/firmware/smbios.h" "b/include/hw/firmware/smbios.h"
---- "a/include/hw/firmware/smbios.h"	2026-06-05 14:37:06.109349563 +0800
-+++ "b/include/hw/firmware/smbios.h"	2026-06-05 14:37:06.110325149 +0800
-@@ -303,6 +303,17 @@ struct smbios_type_19 {
-     uint64_t extended_ending_address;
- } QEMU_PACKED;
- 
-+/* SMBIOS type 27 – Cooling Device */
-+struct smbios_type_27 {
-+    struct smbios_structure_header header;
-+    uint16_t temperature_probe_handle;
-+    uint8_t device_type_and_status;
-+    uint8_t cooling_unitGroup;
-+    uint32_t oem_defined;
-+    uint16_t nominal_speed;
-+    uint8_t description ;
-+} QEMU_PACKED;
-+
- /* SMBIOS type 32 - System Boot Information */
- struct smbios_type_32 {
-     struct smbios_structure_header header;
