@@ -9,7 +9,6 @@ git reset --hard f17b668feb67097891a5f7012a99bcc1687c2584
 sudo apt install devscripts -y
 yes | sudo mk-build-deps --install
 git submodule update --init --recursive
-# 1. 将 ACPI-SMBIOS.patch 拷贝到 qemu 子模块目录
 cp ../ACPI-SMBIOS.patch qemu/
 cd qemu
 patch -p1 < ACPI-SMBIOS.patch
