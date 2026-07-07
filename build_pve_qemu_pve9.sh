@@ -5,16 +5,16 @@ df -h
 git clone git://git.proxmox.com/git/pve-qemu.git
 cd pve-qemu
 # pve9 11.0.2-1
-#git reset --hard f17b668feb67097891a5f7012a99bcc1687c2584
+git reset --hard f17b668feb67097891a5f7012a99bcc1687c2584
 # pve9 11.0.0-4
-git reset --hard f72b7ffaa3d401e09dd03fdea968d6b23c339555
+#git reset --hard f72b7ffaa3d401e09dd03fdea968d6b23c339555
 sudo apt install devscripts -y
 yes | sudo mk-build-deps --install
 git submodule update --init --recursive
-cp ../ACPI-SMBIOS.patch qemu/
-cd qemu
-patch -p1 < ACPI-SMBIOS.patch
-cd ..
+#cp ../ACPI-SMBIOS.patch qemu/
+#cd qemu
+#patch -p1 < ACPI-SMBIOS.patch
+#cd ..
 cp ../sedPatch-pve-qemu-kvm11-anti-dection.sh qemu/
 cd qemu
 meson subprojects download
